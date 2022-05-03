@@ -18,9 +18,7 @@ import com.google.zxing.MultiFormatReader;
 import com.google.zxing.RGBLuminanceSource;
 import com.google.zxing.common.GlobalHistogramBinarizer;
 import com.google.zxing.common.HybridBinarizer;
-import com.huawei.hms.hmsscankit.ScanUtil;
-import com.huawei.hms.ml.scan.HmsScan;
-import com.huawei.hms.ml.scan.HmsScanAnalyzerOptions;
+import com.google.zxing.ReaderException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -226,22 +224,31 @@ public class QRCodeDecoder {
         }
         Bitmap bitmap = BitmapFactory.decodeFile(path, decodeOptions);
 
-        HmsScanAnalyzerOptions options = new HmsScanAnalyzerOptions.Creator().setPhotoMode(true).create();
-        HmsScan[] hmsScans = ScanUtil.decodeWithBitmap(context, bitmap, options);
-
-        if (hmsScans != null && hmsScans.length > 0) {
-            return hmsScans[0].getOriginalValue();
-        }
-        return syncDecodeQRCode(path);
+		return decodeQRCode(context, bitmap);
     }
 
     public static String decodeQRCode(Context context, Bitmap bitmap) {
-        HmsScanAnalyzerOptions options = new HmsScanAnalyzerOptions.Creator().setPhotoMode(true).create();
-        HmsScan[] hmsScans = ScanUtil.decodeWithBitmap(context, bitmap, options);
 
-        if (hmsScans != null && hmsScans.length > 0) {
-            return hmsScans[0].getOriginalValue();
-        }
-        return syncDecodeQRCode(bitmap);
+		MultiFormatReader multiFormatReader = new MultiFormatReader();
+		int width = bitmap.getWidth();
+    	int height = bitmap.getHeight();
+
+		int[] pixels = new int[width * height];
+		bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+
+		Result rawResult = null;
+		RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
+
+		if (source != null) {
+			BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+			try {
+				rawResult = multiFormatReader.decodeWithState(binaryBitmap);
+			} catch (ReaderException re) {
+				re.printStackTrace();
+			} finally {
+				multiFormatReader.reset();
+			}
+		}
+		return rawResult != null ? rawResult.getText() : syncDecodeQRCode(bitmap);
     }
 }
