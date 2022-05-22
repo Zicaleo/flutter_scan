@@ -2,6 +2,6 @@ rootProject.name = 'scan'
 
 sourceControl {
     gitRepository("https://github.com/Zicaleo/zxing-android-embedded.git") {
-        producesModule("com.journeyapps:zxing-android-embedded:4.3.0")
+        producesModule("com.journeyapps:zxing-android-embedded:4.3.0-leo")
     }
 }
