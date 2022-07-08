@@ -31,23 +31,23 @@ public class QRCodeDecoder {
     private static byte[] yuvs;
     public static int MAX_PICTURE_PIXEL = 256;
     public static final List<BarcodeFormat> allFormats = new ArrayList<BarcodeFormat>() {{
-        add(BarcodeFormat.AZTEC);
+        /*add(BarcodeFormat.AZTEC);
         add(BarcodeFormat.CODABAR);
         add(BarcodeFormat.CODE_39);
         add(BarcodeFormat.CODE_93);
-        add(BarcodeFormat.CODE_128);
         add(BarcodeFormat.DATA_MATRIX);
         add(BarcodeFormat.EAN_8);
         add(BarcodeFormat.EAN_13);
         add(BarcodeFormat.ITF);
         add(BarcodeFormat.MAXICODE);
         add(BarcodeFormat.PDF_417);
-        add(BarcodeFormat.QR_CODE);
         add(BarcodeFormat.RSS_14);
         add(BarcodeFormat.RSS_EXPANDED);
         add(BarcodeFormat.UPC_A);
         add(BarcodeFormat.UPC_E);
-        add(BarcodeFormat.UPC_EAN_EXTENSION);
+        add(BarcodeFormat.UPC_EAN_EXTENSION);*/
+        add(BarcodeFormat.CODE_128);
+        add(BarcodeFormat.QR_CODE);
     }};
     public static final Map<DecodeHintType, Object> HINTS = new EnumMap<DecodeHintType, Object>(DecodeHintType.class) {{
         put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
