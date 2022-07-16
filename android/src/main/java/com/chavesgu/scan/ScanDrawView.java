@@ -36,6 +36,7 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
     private double areaX;
     private double areaY;
     private double areaWidth;
+    private int areaHeightRatio = 3;
     private int scanLineColor;
     private boolean transparentScanLine = false;
     private double scale = .7;
@@ -76,7 +77,7 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
         vh = height;
         areaWidth = min(vw, vh) * scale;
         areaX = (vw - areaWidth) / 2;
-        areaY = (vh - areaWidth) / 2;
+        areaY = (vh - (areaWidth / areaHeightRatio)) / 2;
 
         DisplayMetrics dm = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -85,7 +86,7 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
         // init animate
         final float scanLineWidth = (float) (areaWidth * 0.8);
         final long duration = (long) (areaWidth/175/dpi*1.5*1000);
-        positionAnimator = ValueAnimator.ofFloat(0, scanLineWidth);
+        positionAnimator = ValueAnimator.ofFloat(0, scanLineWidth / areaHeightRatio);
         positionAnimator.setDuration(duration);
         positionAnimator.setInterpolator(null);
         positionAnimator.setRepeatMode(ValueAnimator.RESTART);
@@ -133,7 +134,7 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
         final float shortWidth = (float) (areaWidth * 0.1);
         final float scanLineWidth = (float) (areaWidth * 0.8);
         final float scanLineX = (float) (vw - scanLineWidth)/2;
-        final float scanLineY = (float) (vh - scanLineWidth)/2;
+        final float scanLineY = (float) (vh - (scanLineWidth / areaHeightRatio))/2;
 
         if (scale < 1) {
             Paint paint = new Paint();
@@ -148,16 +149,16 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
             canvas.drawLine(x+width, y, x+width-shortWidth, y, paint);
             canvas.drawLine(x+width, y, x+width, y+shortWidth, paint);
 
-            canvas.drawLine(x+width, y+width, x+width-shortWidth, y+width, paint);
-            canvas.drawLine(x+width, y+width, x+width, y+width-shortWidth, paint);
+            canvas.drawLine(x+width, y+(width / areaHeightRatio), x+width-shortWidth, y+(width / areaHeightRatio), paint);
+            canvas.drawLine(x+width, y+(width / areaHeightRatio), x+width, y+(width / areaHeightRatio)-shortWidth, paint);
 
-            canvas.drawLine(x, y+width, x+shortWidth, y+width, paint);
-            canvas.drawLine(x, y+width, x, y+width-shortWidth, paint);
+            canvas.drawLine(x, y+(width / areaHeightRatio), x+shortWidth, y+(width / areaHeightRatio), paint);
+            canvas.drawLine(x, y+(width / areaHeightRatio), x, y+(width / areaHeightRatio)-shortWidth, paint);
 
             // mask
             canvas.save();
             Path clipPath = new Path();
-            clipPath.addRect(x-2,y-2,(float)(x+areaWidth+2),(float)(y+areaWidth+2),Path.Direction.CCW);
+            clipPath.addRect(x-2,y-2,(float)(x+areaWidth+2),(float)(y+(areaWidth/areaHeightRatio)+2),Path.Direction.CCW);
             canvas.clipPath(clipPath, Region.Op.DIFFERENCE);
 
             Paint maskPaint = new Paint();
