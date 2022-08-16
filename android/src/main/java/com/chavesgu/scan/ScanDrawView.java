@@ -51,7 +51,7 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
         super(context);
 
         scale = (double) args.get("scale");
-        if (scale == 1)
+        if (scale == 1.0)
             areaHeightRatio = 1;
         final int r = (int) args.get("r");
         final int g = (int) args.get("g");
@@ -77,7 +77,10 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
     public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int width, int height) {
         vw = width;
         vh = height;
-        areaWidth = min(vw, vh) * scale;
+        if (scale == 1.0)
+            areaWidth = min(vw, vh) * 0.9;
+        else
+            areaWidth = min(vw, vh) * scale;
         areaX = (vw - areaWidth) / 2;
         areaY = (vh - (areaWidth / areaHeightRatio)) / 2;
 
