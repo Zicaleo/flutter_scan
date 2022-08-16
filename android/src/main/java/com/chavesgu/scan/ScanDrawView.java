@@ -51,6 +51,8 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
         super(context);
 
         scale = (double) args.get("scale");
+        if (scale == 1)
+            areaHeightRatio = 1;
         final int r = (int) args.get("r");
         final int g = (int) args.get("g");
         final int b = (int) args.get("b");
@@ -136,7 +138,7 @@ public class ScanDrawView extends SurfaceView implements SurfaceHolder.Callback 
         final float scanLineX = (float) (vw - scanLineWidth)/2;
         final float scanLineY = (float) (vh - (scanLineWidth / areaHeightRatio))/2;
 
-        if (scale < 1) {
+        if (scale < 1 || areaHeightRatio == 1) {
             Paint paint = new Paint();
             paint.setColor(scanLineColor);
             paint.setStrokeWidth(2*dpi);
